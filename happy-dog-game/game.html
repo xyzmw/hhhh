@@ -3,19 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>祝你开心——香芋</title>
+    <title>祝你开心 - 来自香芋</title>
     <style>
         /* 全局样式与温暖配色 */
         :root {
-            --bg-color: #FAF6F0;        /* 奶油米色背景 */
-            --card-bg: #FFFFFF;          /* 卡片纯白背景 */
-            --text-main: #5C554E;        /* 暖棕色文字 */
-            --text-muted: #9A8F86;       /* 浅暖灰色文字 */
-            --accent-color: #DDA586;     /* 柔和奶茶色/桃色点缀 */
+            --bg-color: #FAF6F0;
+            --card-bg: #FFFFFF;
+            --text-main: #5C554E;
+            --text-muted: #9A8F86;
+            --accent-color: #DDA586;
             --accent-hover: #C99171;
-            --border-color: #EFE6DD;     /* 浅暖色边框 */
-            --board-bg: #EBE0D6;         /* 游戏棋盘背景 */
-            --cell-bg: #FAF4EE;          /* 空槽背景 */
+            --border-color: #EFE6DD;
+            --board-bg: #EBE0D6;
             --shadow: 0 12px 30px rgba(180, 150, 130, 0.12);
         }
 
@@ -33,7 +32,6 @@
             user-select: none;
         }
 
-        /* 主容器卡片 */
         .container {
             display: flex;
             background: var(--card-bg);
@@ -46,8 +44,8 @@
             border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
-        /* 左侧图片区域 */
-        .image-section {
+        /* 左侧动态展示区域 */
+        .display-section {
             flex: 1;
             min-width: 320px;
             background-color: #FDFBF9;
@@ -59,31 +57,28 @@
             border-right: 1px solid var(--border-color);
         }
 
-        .image-wrapper {
-            position: relative;
+        /* 左侧大文本框（动态更新） */
+        .large-textarea {
             width: 100%;
-            max-width: 400px;
+            height: 350px;
+            padding: 20px;
+            border: 2px dashed var(--border-color);
             border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 10px 25px rgba(180, 150, 130, 0.15);
+            font-family: inherit;
+            font-size: 16px;
+            line-height: 1.8;
+            resize: none;
+            background-color: #FFFFFF;
+            color: var(--text-main);
+            box-sizing: border-box;
+            cursor: not-allowed;
+            box-shadow: 0 4px 15px rgba(180, 150, 130, 0.08);
         }
 
-        .image-section img {
-            display: block;
-            width: 100%;
-            height: auto;
-            transition: transform 0.5s ease;
-        }
-
-        .image-wrapper:hover img {
-            transform: scale(1.03);
-        }
-
-        .image-caption {
-            margin-top: 20px;
-            font-size: 14px;
-            color: var(--text-muted);
-            letter-spacing: 1px;
+        .large-textarea::placeholder {
+            color: #ccc;
+            text-align: center;
+            padding-top: 140px;
         }
 
         /* 右侧交互区域 */
@@ -106,8 +101,8 @@
             letter-spacing: 2px;
         }
 
-        /* 文本框样式（便签纸风格） */
-        textarea {
+        /* 右侧小文本框（固定不变） */
+        .small-textarea {
             width: 100%;
             height: 70px;
             padding: 15px;
@@ -121,7 +116,6 @@
             color: var(--text-muted);
             box-sizing: border-box;
             cursor: not-allowed;
-            transition: all 0.3s ease;
         }
 
         /* 游戏外层容器 */
@@ -234,10 +228,22 @@
         @media (max-width: 768px) {
             body { align-items: flex-start; padding: 10px; }
             .container { flex-direction: column; border-radius: 20px; }
-            .image-section { display: none; } /* 移动端隐藏图片以省空间 */
+            .display-section { 
+                display: flex;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+                padding: 15px;
+            }
+            .large-textarea {
+                height: 120px;
+                font-size: 14px;
+            }
+            .large-textarea::placeholder {
+                padding-top: 40px;
+            }
             .interaction-section { padding: 20px; min-width: auto; }
             h2 { font-size: 1.5rem; margin-bottom: 5px; }
-            textarea { height: 60px; font-size: 12px; }
+            .small-textarea { height: 60px; font-size: 12px; }
             .game-container { max-width: 100%; }
         }
     </style>
@@ -245,21 +251,18 @@
 <body>
 
     <div class="container">
-        <!-- 左侧：图片展示区域 -->
-        <div class="image-section">
-            <div class="image-wrapper">
-                <!-- 注意：这里的图片文件名要和你的本地文件一模一样 -->
-                <img src="dog.png" alt="治愈系可爱小狗">
-            </div>
-            <div class="image-caption">每天都要开心哦 🐾</div>
+        <!-- 左侧：动态更新区域 -->
+        <div class="display-section">
+            <!-- 这里的文字将由 editor.html 控制 -->
+            <textarea id="mainTextArea" class="large-textarea" readonly placeholder="等待外部程序写入内容..."></textarea>
         </div>
 
         <!-- 右侧：交互与游戏区域 -->
         <div class="interaction-section">
-            <h2>来一局？</h2>
+            <h2>不玩一局？</h2>
             
-            <!-- 文本框：已锁定，等待编辑器写入 -->
-            <textarea id="codeArea" readonly placeholder="等待外部程序写入内容...">游戏规则：滑动或使用方向键合并相同的数字，努力凑出 2048 吧！</textarea>
+            <!-- 右侧文本框：写死的内容，不会被修改 -->
+            <textarea id="codeArea" class="small-textarea" readonly>游戏规则：滑动或使用方向键合并相同的数字，努力凑出 2048 吧！</textarea>
 
             <div class="game-container">
                 <div class="game-header">
@@ -288,21 +291,22 @@
     </div>
 
     <script>
-        // ================= 跨页面通信逻辑（保持锁定状态，仅接受外部数据） =================
-        const codeArea = document.getElementById('codeArea');
+        // ================= 跨页面通信逻辑 =================
+        // 注意：这里只获取左侧的动态文本框
+        const mainTextArea = document.getElementById('mainTextArea');
         
-        // 1. 页面加载时，读取 localStorage 中的内容
+        // 1. 页面加载时，读取 localStorage 中的内容并填入左侧文本框
         window.addEventListener('load', () => {
             const savedContent = localStorage.getItem('myTextareaContent');
             if (savedContent !== null) {
-                codeArea.value = savedContent;
+                mainTextArea.value = savedContent;
             }
         });
 
-        // 2. 监听 storage 事件，实现 editor.html 修改时实时同步
+        // 2. 监听 storage 事件，实现 editor.html 修改时实时同步到左侧文本框
         window.addEventListener('storage', (e) => {
             if (e.key === 'myTextareaContent') {
-                codeArea.value = e.newValue;
+                mainTextArea.value = e.newValue;
             }
         });
 
@@ -339,7 +343,6 @@
             scoreValue.textContent = score;
         }
 
-        // 配合治愈系配色的数字颜色
         function getColor(val) {
             const colors = {
                 2: '#F5EDE6', 4: '#EADBCE', 8: '#E8C0A8', 16: '#DDA586',
@@ -360,7 +363,6 @@
         }
 
         function drawBoard() {
-            // 棋盘底色
             ctx.fillStyle = '#EBE0D6';
             ctx.fillRect(0, 0, 400, 400);
 
@@ -369,7 +371,6 @@
                     let x = 8 + c * 98;
                     let y = 8 + r * 98;
                     
-                    // 空槽底色
                     ctx.fillStyle = '#FAF4EE';
                     ctx.fillRect(x, y, 90, 90);
 
@@ -475,7 +476,6 @@
             updateScoreDisplay();
         }
 
-        // 键盘控制
         window.addEventListener('keydown', (e) => {
             if (!gameRunning) return;
             if ([37, 38, 39, 40].includes(e.keyCode)) e.preventDefault();
@@ -487,7 +487,6 @@
             }
         });
 
-        // 移动端触摸滑动控制
         let touchStartX = 0;
         let touchStartY = 0;
 
@@ -512,7 +511,6 @@
             }
         }, { passive: false });
 
-        // 绑定按钮事件
         document.getElementById('startBtn').addEventListener('click', startGame);
         document.getElementById('restartBtn').addEventListener('click', startGame);
         document.getElementById('newGameBtn').addEventListener('click', startGame);
