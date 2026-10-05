@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文本框内容修改器</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+        .editor-box {
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #8f7a66;
+            text-align: center;
+        }
+        p.desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            box-sizing: border-box;
+            font-family: inherit;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #8f7a66;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #8f7a66;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #776e65;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .status {
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+            color: #27ae60;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="editor-box">
+        <h2>🔧 文本框内容修改器</h2>
+        <p class="desc">
+            请在下方输入新的内容，点击保存后，会实时同步到 2048 游戏页面的文本框中。<br>
+            <strong>注意：</strong>请先打开游戏页面（game.html），保持其处于打开状态，才能看到实时同步效果。
+        </p>
+        
+        <textarea id="inputArea" placeholder="在这里输入要替换的内容..."></textarea>
+        <button onclick="saveContent()">保存并同步到游戏页面</button>
+        <div class="status" id="statusMsg">✅ 已成功同步！</div>
+    </div>
+
+    <script>
+        // 页面加载时，读取当前已保存的内容，方便修改
+        window.addEventListener('load', () => {
+            const savedContent = localStorage.getItem('myTextareaContent');
+            if (savedContent !== null) {
+                document.getElementById('inputArea').value = savedContent;
+            }
+        });
+
+        // 保存并同步
+        function saveContent() {
+            const content = document.getElementById('inputArea').value;
+            
+            // 存入 localStorage
+            localStorage.setItem('myTextareaContent', content);
+            
+            // 显示提示
+            const statusMsg = document.getElementById('statusMsg');
+            statusMsg.style.display = 'block';
+            
+            // 2秒后隐藏提示
+            setTimeout(() => {
+                statusMsg.style.display = 'none';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
